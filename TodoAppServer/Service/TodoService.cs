@@ -1,0 +1,89 @@
+﻿using TodoAppServer.Data;
+using TodoAppServer.Models;
+
+namespace TodoAppServer.Service
+{
+    public class TodoService : ITodoService
+    {
+        private readonly TodoAppDbContext _dbContext;
+
+        public TodoService(TodoAppDbContext dbContext) 
+        {
+            _dbContext = dbContext;
+        }
+        
+        public bool AddTodo(Todo todo)
+        {
+            try
+            {
+                _dbContext.Todos.Add(todo);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public Todo? GetTodoById(int id)
+        {
+            try
+            {
+                return _dbContext?.Todos.Find(id);
+            }
+            catch
+            {
+                throw;
+               
+            }
+        }
+
+        public List<Todo> GetTodos()
+        {
+            try
+            {
+                return _dbContext.Todos.ToList();
+            }
+            catch { throw; }
+        }
+
+        public bool RemoveTodo(int todoId)
+        {
+            try
+            {
+                var todo = _dbContext?.Todos.Find(todoId);
+                if(todo is not null)
+                {
+                    _dbContext?.Todos.Remove(todo);
+                    _dbContext?.SaveChanges();
+                    return true;
+                }
+                return false;
+
+            }
+            catch { throw; }
+        }
+
+        public bool UpdateTodo(Todo todo)
+        {
+            try
+            {
+                var todoData = _dbContext?.Todos.Find(todo.Id);
+                if (todoData is not null)
+                {
+                    todoData.Title = todo.Title;
+                    todoData.Description = todo.Description;
+                    todoData.IsCompleted = todo.IsCompleted;
+                    _dbContext?.Update(todoData);
+                    _dbContext?.SaveChanges();
+                    return true;
+                }
+                return false;
+
+            }
+            catch { throw; }
+        }
+    }
+}
