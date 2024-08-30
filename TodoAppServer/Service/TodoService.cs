@@ -7,11 +7,11 @@ namespace TodoAppServer.Service
     {
         private readonly TodoAppDbContext _dbContext;
 
-        public TodoService(TodoAppDbContext dbContext) 
+        public TodoService(TodoAppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        
+
         public bool AddTodo(Todo todo)
         {
             try
@@ -36,7 +36,7 @@ namespace TodoAppServer.Service
             catch
             {
                 throw;
-               
+
             }
         }
 
@@ -54,7 +54,7 @@ namespace TodoAppServer.Service
             try
             {
                 var todo = _dbContext?.Todos.Find(todoId);
-                if(todo is not null)
+                if (todo is not null)
                 {
                     _dbContext?.Todos.Remove(todo);
                     _dbContext?.SaveChanges();
@@ -70,18 +70,9 @@ namespace TodoAppServer.Service
         {
             try
             {
-                var todoData = _dbContext?.Todos.Find(todo.Id);
-                if (todoData is not null)
-                {
-                    todoData.Title = todo.Title;
-                    todoData.Description = todo.Description;
-                    todoData.IsCompleted = todo.IsCompleted;
-                    _dbContext?.Update(todoData);
-                    _dbContext?.SaveChanges();
-                    return true;
-                }
-                return false;
-
+                _dbContext?.Update(todo);
+                _dbContext?.SaveChanges();
+                return true;
             }
             catch { throw; }
         }
