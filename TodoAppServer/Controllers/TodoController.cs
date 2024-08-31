@@ -100,7 +100,7 @@ namespace TodoAppServer.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("deleteTodo")]
         public ActionResult DeleteTodo(int todoId)
         {
@@ -112,10 +112,15 @@ namespace TodoAppServer.Controllers
                 }
                 else
                 {
-                    var response = _todoService.RemoveTodo(todoId);
-                    if (response)
+                    var responseTodo = _todoService.GetTodoById(todoId);
+                    if (responseTodo != null)
                     {
-                        return Ok(response);
+                        
+                        responseTodo.IsDeleted = true;
+                        responseTodo.LastModifiedDate = DateTime.Now;
+                        _todoService.UpdateTodo(responseTodo);
+                        return Ok();
+                        
                     }
                     return BadRequest();
                 }

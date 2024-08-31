@@ -44,7 +44,7 @@ namespace TodoAppServer.Service
         {
             try
             {
-                return _dbContext.Todos.ToList();
+                return _dbContext.Todos.Where(x=>!x.IsDeleted).ToList();
             }
             catch { throw; }
         }
