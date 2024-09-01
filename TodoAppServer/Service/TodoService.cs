@@ -40,11 +40,11 @@ namespace TodoAppServer.Service
             }
         }
 
-        public List<Todo> GetTodos()
+        public IQueryable<Todo> GetTodos()
         {
             try
             {
-                return _dbContext.Todos.Where(x=>!x.IsDeleted).ToList();
+                return _dbContext.Todos.OrderByDescending(x => x.CreatedDate);
             }
             catch { throw; }
         }

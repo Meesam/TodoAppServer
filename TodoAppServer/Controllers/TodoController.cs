@@ -23,7 +23,37 @@ namespace TodoAppServer.Controllers
         {
             try
             {
-                var data = _todoService.GetTodos();
+                var data = _todoService.GetTodos().Where(x=>!x.IsDeleted).ToList();
+                return Ok(data);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("getAllCompletedTodos")]
+        public ActionResult GetAllCompletedTodos()
+        {
+            try
+            {
+                var data = _todoService.GetTodos().Where(x=>!x.IsDeleted).Where(x=>x.IsCompleted).ToList();
+                return Ok(data);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("getAllDeletedTodos")]
+        public ActionResult GetAllDeleyedTodos()
+        {
+            try
+            {
+                var data = _todoService.GetTodos().Where(x => x.IsDeleted).ToList();
                 return Ok(data);
             }
             catch
